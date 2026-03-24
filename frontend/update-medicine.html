@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Update Medicine</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://img.freepik.com/premium-photo/3d-pharmacist-icon-with-inventory-system-modern-pharmacy-setting-managing-prescriptions-sup_980716-489930.jpg?uid=R201043790&ga=GA1.1.386544471.1728137686&semt=ais_hybrid&w=740') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    form {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 30px 25px;
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      max-width: 400px;
+      width: 100%;
+      color: #2c3e50;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 25px;
+      text-align: center;
+      font-weight: 700;
+      user-select: none;
+      color: #2c3e50;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 18px;
+      border: 1.8px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    input:focus, select:focus {
+      border-color: #4CAF50;
+      outline: none;
+      box-shadow: 0 0 6px rgba(76, 175, 80, 0.4);
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.4);
+    }
+
+    button:hover {
+      background-color: #45a049;
+      box-shadow: 0 6px 14px rgba(69, 160, 73, 0.7);
+    }
+
+    #msg {
+      text-align: center;
+      font-weight: 700;
+      margin-top: 15px;
+      color: #27ae60;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <form id="updateForm">
+    <h2>Update Medicine Details</h2>
+    <input type="text" id="id" placeholder="Medicine ID to Update" required>
+    <input type="text" id="name" placeholder="Name">
+    <input type="text" id="brand" placeholder="Brand">
+    <input type="number" id="price" placeholder="Price">
+    <input type="number" id="quantity" placeholder="Quantity">
+    <input type="date" id="expiry_date">
+    <select id="supplier_id">
+      <option value="">Select Supplier</option>
+    </select>
+    <button type="submit">Update</button>
+    <p id="msg"></p>
+  </form>
+
+  <script>
+    // Load suppliers into dropdown
+    fetch('http://localhost:3000/suppliers')
+      .then(res => res.json())
+      .then(suppliers => {
+        const supplierSelect = document.getElementById('supplier_id');
+        suppliers.forEach(supplier => {
+          const option = document.createElement('option');
+          option.value = supplier.id;
+          option.textContent = supplier.name;
+          supplierSelect.appendChild(option);
+        });
+      });
+
+    // Handle form submission
+    document.getElementById('updateForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const id = document.getElementById('id').value.trim();
+      const data = {
+        name: document.getElementById('name').value.trim(),
+        brand: document.getElementById('brand').value.trim(),
+        price: document.getElementById('price').value,
+        quantity: document.getElementById('quantity').value,
+        expiry_date: document.getElementById('expiry_date').value,
+        supplier_id: document.getElementById('supplier_id').value
+      };
+
+      // Remove empty fields
+      Object.keys(data).forEach(key => {
+        if (!data[key]) delete data[key];
+      });
+
+      fetch(`http://localhost:3000/medicines/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.text())
+      .then(msg => {
+        document.getElementById('msg').textContent = msg;
+      })
+      .catch(err => {
+        document.getElementById('msg').textContent = 'Update failed';
+        console.error(err);
+      });
+    });
+  </script>
+</body>
+</html>

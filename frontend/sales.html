@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sales Records</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://img.freepik.com/premium-photo/pharmacist-consulting-with-patient-counter-discussing-medication_130181-43431.jpg?uid=R201043790&ga=GA1.1.386544471.1728137686&semt=ais_hybrid&w=740') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 40px;
+      color: #333;
+    }
+
+    h1 {
+      font-size: 50px;
+      margin-bottom: 25px;
+      text-align: center;
+      color: #ffffff;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+      user-select: none;
+    }
+
+    table {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      border-collapse: separate;
+      border-spacing: 0 12px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      overflow: hidden;
+      font-size: 16px;
+    }
+
+    thead tr {
+      background-color: rgba(52, 73, 94, 0.95);
+    }
+
+    thead th {
+      color: white;
+      font-weight: bold;
+    }
+
+    th, td {
+      padding: 14px 20px;
+      text-align: center;
+      color: #000;
+      font-weight:bold;
+    }
+
+    tbody tr {
+      background-color: rgba(255, 255, 255, 0.3);
+      transition: background-color 0.3s ease;
+    }
+
+    tbody tr:hover {
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 20px;
+      }
+      table {
+        font-size: 14px;
+      }
+      th, td {
+        padding: 10px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>📊 Sales Records</h1>
+
+  <table id="salesTable">
+    <thead>
+      <tr>
+        <th>Sale ID</th>
+        <th>Customer Name</th>
+        <th>Medicine Name</th>
+        <th>Quantity</th>
+        <th>Total Price</th>
+        <th>Sale Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Sales rows will be inserted here -->
+    </tbody>
+  </table>
+
+  <script>
+    const role = localStorage.getItem('userRole');
+    if (!role) {
+      alert('Please login first.');
+      window.location.href = 'login.html';
+    }
+
+    fetch('http://localhost:3000/sales')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.querySelector('#salesTable tbody');
+        data.forEach(sale => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${sale.sale_id}</td>  
+            <td>${sale.customer_name}</td>
+            <td>${sale.medicine_name}</td>
+            <td>${sale.quantity}</td>
+            <td>${sale.total_price}</td>
+            <td>${new Date(sale.sale_date).toLocaleDateString()}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      })
+      .catch(err => {
+        console.error('Error fetching sales:', err);
+        alert('Failed to load sales data.');
+      });
+  </script>
+</body>
+</html>

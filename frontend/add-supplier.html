@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Supplier</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://img.freepik.com/premium-photo/pharmacist-is-focused-using-computer-check-prescriptions-well-organized-pharmacy-environment-is-professional-emphasizes-attention-detail_1299130-46861.jpg?uid=R201043790&ga=GA1.1.386544471.1728137686&semt=ais_hybrid&w=740') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 25px;
+      font-weight: 700;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    form {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    input[type="text"] {
+      padding: 12px 15px;
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      transition: border-color 0.3s ease;
+      outline: none;
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    input[type="text"]:focus {
+      border-color: #28a745;
+      box-shadow: 0 0 5px rgba(40,167,69,0.5);
+    }
+
+    button {
+      padding: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(45deg, #28a745, #1e7e34);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(45deg, #1e7e34, #155d27);
+    }
+
+    #msg {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 16px;
+      color: #28a745;
+      min-height: 24px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h2>Add New Supplier</h2>
+    <form id="supplierForm">
+      <input type="text" id="name" placeholder="Supplier Name" required>
+      <input type="text" id="contact" placeholder="Contact" required>
+      <input type="text" id="address" placeholder="Address" required>
+      <button type="submit">Add Supplier</button>
+    </form>
+    <p id="msg"></p>
+  </div>
+
+  <script>
+    const form = document.getElementById('supplierForm');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const data = {
+        name: document.getElementById('name').value,
+        contact: document.getElementById('contact').value,
+        address: document.getElementById('address').value
+      };
+
+      fetch('http://localhost:3000/suppliers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.text())
+      .then(msg => {
+        document.getElementById('msg').textContent = msg;
+        form.reset();
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      margin-top: 120px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://img.freepik.com/free-photo/top-view-medicine-keyboard-arrangement_23-2149341566.jpg?uid=R201043790&ga=GA1.1.386544471.1728137686&semt=ais_hybrid&w=740') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      color: #000000;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    nav {
+      background-color: rgba(255, 255, 255, 0.85);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #2c3e50;
+      background-color: #ecf0f1;
+      padding: 16px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    nav a:hover {
+      background-color: #3498db;
+      color: white;
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    nav a:hover::before {
+      transform: scale(1.1);
+    }
+    #ai-card {
+  margin-top: 30px;
+  padding: 20px;
+  width: 100%;
+  max-width: 900px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+#ai-card h2 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.ai-section {
+  margin-bottom: 15px;
+}
+
+.ai-section h3 {
+  margin-bottom: 5px;
+  color: #2c3e50;
+}
+
+.ai-section ul {
+  padding-left: 20px;
+}
+.ai-section:nth-child(3) li { color: red; font-weight:bold; }   /* expired */
+.ai-section:nth-child(4) li { color: orange; font-weight:bold} /* expiring */
+  </style>
+</head>
+<body>
+  <h1>Admin Dashboard</h1>
+  <nav>
+    <a href="add-medicine.html">➕ Add Medicine</a>
+    <a href="update-medicine.html">✏️ Update Medicine</a>
+    <a href="delete-medicine.html">🗑️ Delete Medicine</a>
+    <a href="add-supplier.html">🚚 Add Supplier</a>
+    <a href="manage-customer.html">👥 Manage Customers</a>
+    <a href="view-medicines.html">📋 View Medicines</a>
+    <a href="add-customer.html">➕ Add Customer</a>
+    <a href="add-sale.html">💸 Record Sale</a>
+    <a href="sales.html">📊 View Sales</a>
+  </nav>
+
+  <script>
+    const role = localStorage.getItem('userRole');
+    if (role !== 'admin') {
+      alert('Access denied. Admins only!');
+      window.location.href = 'login.html';
+    }
+  </script>
+  <div id="ai-card">
+  <h2>⚠️ AI Insights</h2>
+
+  <div class="ai-section">
+    <h3>🔴 Low Stock</h3>
+    <ul id="lowStockList"></ul>
+  </div>
+  <div class="ai-section">
+  <h3>❌ Expired Medicines</h3>
+  <ul id="expiredList"></ul>
+</div>
+  <div class="ai-section">
+    <h3>⏳ Expiring Soon</h3>
+    <ul id="expiryList"></ul>
+  </div>
+</div>
+<script>
+async function loadAlerts() {
+  const lowStock = await fetch('/ai/low-stock').then(res => res.json());
+  const expiry = await fetch('/ai/expiry-alerts').then(res => res.json());
+  const expired = await fetch('/ai/expired').then(res => res.json()); // ✅ ADD THIS
+
+  const lowStockList = document.getElementById("lowStockList");
+  const expiryList = document.getElementById("expiryList");
+  const expiredList = document.getElementById("expiredList"); // ✅ ADD THIS
+
+  lowStockList.innerHTML = "";
+  expiryList.innerHTML = "";
+  expiredList.innerHTML = ""; // ✅ ADD THIS
+
+  // 🔴 LOW STOCK
+  if (lowStock.length === 0) {
+    lowStockList.innerHTML = "<li>✅ All stock levels are good</li>";
+  } else {
+    lowStock.forEach(m => {
+      lowStockList.innerHTML += `<li>${m.name} (Stock: ${m.quantity})</li>`;
+    });
+  }
+
+  // ❌ EXPIRED MEDICINES
+if (expired.length === 0) {
+  expiredList.innerHTML = "<li>✅ No expired medicines</li>";
+} else {
+  expired.forEach(m => {
+    const date = new Date(m.expiry_date).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+
+    expiredList.innerHTML += `<li>${m.name} (Expired: ${date})</li>`;
+  });
+}
+
+  // ⏳ EXPIRING SOON
+  // ⏳ EXPIRING SOON
+if (expiry.length === 0) {
+  expiryList.innerHTML = "<li>✅ No medicines expiring soon</li>";
+} else {
+  expiry.forEach(m => {
+    const date = new Date(m.expiry_date).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+
+    expiryList.innerHTML += `<li>${m.name} (Expiry: ${date})</li>`;
+  });
+}
+}
+
+loadAlerts();
+</script>
+</body>
+</html>

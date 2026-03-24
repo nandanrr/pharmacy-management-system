@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Delete Medicine</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin-right: 260px;
+      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://img.freepik.com/free-photo/person-using-digital-tablet-with-first-aid-kit-capsules-blue-background_23-2147874878.jpg?uid=R201043790&ga=GA1.1.386544471.1728137686&semt=ais_hybrid&w=740') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: end;
+      align-items: center;
+      height: 100vh;
+    }
+
+    h2 {
+      text-align: center;
+      color: #ffffff;
+      margin-bottom: 25px;
+      font-weight: 700;
+    }
+
+    form {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    input[type="number"] {
+      padding: 12px 15px;
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      transition: border-color 0.3s ease;
+      outline: none;
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    input[type="number"]:focus {
+      border-color: #dc3545;
+      box-shadow: 0 0 5px rgba(220,53,69,0.5);
+    }
+
+    button {
+      padding: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(45deg, #dc3545, #a71d2a);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(45deg, #a71d2a, #6e131d);
+    }
+
+    #msg {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 16px;
+      color: #dc3545;
+      min-height: 24px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h2>Delete Medicine</h2>
+    <form id="deleteForm">
+      <input type="number" id="id" placeholder="Medicine ID to Delete" required>
+      <button type="submit">Delete</button>
+    </form>
+    <p id="msg"></p>
+  </div>
+
+  <script>
+    document.getElementById('deleteForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const id = document.getElementById('id').value;
+      const token = localStorage.getItem('token');
+
+      fetch(`http://localhost:3000/medicines/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(res => res.text())
+      .then(msg => {
+        document.getElementById('msg').textContent = msg;
+      })
+      .catch(err => {
+        console.error('Delete error:', err);
+        document.getElementById('msg').textContent = 'Something went wrong.';
+      });
+    });
+  </script>
+</body>
+</html>

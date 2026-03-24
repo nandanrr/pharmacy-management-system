@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cashier Dashboard</title>
+  <style>
+    body {
+      margin-right:0px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://img.freepik.com/premium-photo/scattered-pharmaceutical-medicine-pills-tablets-capsules-dollar-money-isolated-blue-background_130265-662.jpg?uid=R201043790&ga=GA1.1.386544471.1728137686&semt=ais_hybrid&w=740') no-repeat center center fixed;
+      background-size:cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      color: #000000;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    nav {
+      background-color: rgba(255, 255, 255, 0.88);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #2f3e4e;
+      background-color: #e8eef7;
+      padding: 16px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    nav a:hover {
+      background-color: #3182ce;
+      color: white;
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <h1>Cashier Dashboard</h1>
+  <nav>
+    <a href="view-medicines.html">📋 View Medicines</a>
+    <a href="update-medicine.html">✏️ Update Medicine</a>
+<!-- Remove or comment this block -->
+<!--
+<div class="card">
+  <a href="delete-medicine.html">🗑️ Delete Medicine</a>
+</div>
+-->
+
+    <a href="add-customer.html">➕ Add Customer</a>
+    <a href="add-sale.html">💸 Record Sale</a>
+    <a href="sales.html">📊 View Sales</a>
+  </nav>
+
+  <script>
+    const role = localStorage.getItem('userRole');
+    if (role !== 'cashier') {
+      alert('Access denied. Cashiers only!');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>
