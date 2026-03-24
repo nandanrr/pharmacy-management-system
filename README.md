@@ -27,19 +27,31 @@ A full-stack Pharmacy Management System built using Node.js, Express, and MySQL 
 ## ⚙️ Setup
 
 Clone the repository:
+
+```
 git clone https://github.com/nandanrr/pharmacy-management-system.git
+```
 
 Install dependencies:
+
+```
 npm install
+```
 
 Create .env file:
+
+```
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=your_password
 DB_NAME=pharmacy_db
+```
 
 Run the server:
+
+```
 node server.js
+```
 
 ## 💼 Author
 
