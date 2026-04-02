@@ -339,4 +339,8 @@ app.get('/ai/expiry-alerts', (req, res) => {
 });
 
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+const PORT1 = process.env.PORT || 3000;
+
+app.listen(PORT1, () => {
+  console.log(`Server running on port ${PORT1}`);
+});
