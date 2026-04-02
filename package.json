@@ -1,13 +1,13 @@
 {
   "name": "pharmacy-system",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Pharmacy Management System",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "NANDAN R",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^2.2.0",
