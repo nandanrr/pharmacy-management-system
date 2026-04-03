@@ -264,15 +264,26 @@ app.post('/login', (req, res) => {
     console.log("👉 DB RESULT:", results); // 🔥 ADD
 
     if (results.length > 0) {
-      res.json({ success: true });
-    } else {
-      res.json({ success: false });
-    }
+  const user = results[0];
+
+  const token = jwt.sign(
+    { id: user.id, role: user.role },
+    secretKey,
+    { expiresIn: '2h' }
+  );
+
+  res.json({
+    success: true,
+    token,
+    role: user.role,
+    user
+  });
+}
   });
 });
 
 
-const PORT = 3000;
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/frontend/login.html');
 });
@@ -340,8 +351,8 @@ app.get('/ai/expiry-alerts', (req, res) => {
 });
 
 
-const PORT1 = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
-app.listen(PORT1, () => {
-  console.log(`Server running on port ${PORT1}`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
