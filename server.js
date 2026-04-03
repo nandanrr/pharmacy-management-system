@@ -254,11 +254,11 @@ app.get('/users', (req, res) => {
 app.post('/login', (req, res) => {
   const { username, password, role } = req.body;
 
-  console.log("LOGIN INPUT:", username, password, role); 
-  
+  const fixedRole = role.toLowerCase(); // 🔥 FIX
+
   const sql = 'SELECT * FROM users WHERE username = ? AND password = ? AND role = ?';
 
-  db.query(sql, [username, password, role], (err, results) => {
+  db.query(sql, [username, password, fixedRole], (err, results) => {
     if (err) return res.status(500).json({ success: false });
 
     if (results.length > 0) {
@@ -271,7 +271,6 @@ app.post('/login', (req, res) => {
     }
   });
 });
-
 
 
 const PORT = 3000;
