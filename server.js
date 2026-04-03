@@ -29,13 +29,7 @@ const db = mysql.createPool({
   queueLimit: 0
 });
 
-db.connect(err => {
-  if (err) {
-    console.error('DB Connection Failed:', err);
-  } else {
-    console.log('Railway MySQL Connected 🚀');
-  }
-});
+console.log("MySQL Pool Ready 🚀");
 
 // ---------------------- MEDICINES ----------------------
 app.get('/medicines', (req, res) => {
