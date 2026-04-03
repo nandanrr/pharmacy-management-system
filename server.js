@@ -254,18 +254,20 @@ app.get('/users', (req, res) => {
 app.post('/login', (req, res) => {
   const { username, password, role } = req.body;
 
-  const fixedRole = role.toLowerCase(); // 🔥 FIX
+  console.log("👉 LOGIN DATA:", username, password, role); // 🔥 ADD
 
   const sql = 'SELECT * FROM users WHERE username = ? AND password = ? AND role = ?';
 
-  db.query(sql, [username, password, fixedRole], (err, results) => {
-    if (err) return res.status(500).json({ success: false });
+  db.query(sql, [username, password, role], (err, results) => {
+    if (err) {
+      console.log("❌ DB ERROR:", err);
+      return res.status(500).json({ success: false });
+    }
+
+    console.log("👉 DB RESULT:", results); // 🔥 ADD
 
     if (results.length > 0) {
-      const user = results[0];
-      const token = jwt.sign({ id: user.id, role: user.role }, secretKey, { expiresIn: '2h' });
-
-      res.json({ success: true, token, role: user.role, user });
+      res.json({ success: true });
     } else {
       res.json({ success: false });
     }
